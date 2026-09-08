@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from.schemas import JobCreate
 from .database import engine, get_db
@@ -15,6 +15,20 @@ def home():
 @app.get("/jobs")
 def get_jobs(db: Session = Depends(get_db)):
     return db.query(JobApplication).all()
+
+@app.get("/jobs/{job_id}")
+def get_job(job_id : int, db: Session = Depends(get_db)):
+    job = db.query(JobApplication).filter(
+            JobApplication.id == job_id
+        ).first()
+    if job is None:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    return job
+
+
+
+
 
 @app.post("/jobs")
 def post_jobs(job: JobCreate, db: Session = Depends(get_db)):
