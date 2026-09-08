@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from.schemas import JobCreate
+from.schemas import JobCreate, JobUpdate
 from .database import engine, get_db
 from .models import JobApplication
 
@@ -27,7 +27,29 @@ def get_job(job_id : int, db: Session = Depends(get_db)):
     return job
 
 
+@app.put("/jobs/{job_id}")
+def edit_job(job_id : int, job: JobUpdate, db: Session = Depends(get_db)):
+    updated_job = db.query(JobApplication).filter(
+                JobApplication.id == job_id
+            ).first()
+    if updated_job is None:
+        raise HTTPException(status_code=404, detail="Job not found")
 
+    if job.company is not None:
+        updated_job.company = job.company
+
+    if job.position is not None:
+        updated_job.position = job.position
+
+    if job.job_url is not None:
+        updated_job.job_url = job.job_url
+
+    if job.status is not None:
+        updated_job.status = job.status
+
+    db.commit()
+    db.refresh(updated_job)
+    return updated_job
 
 
 @app.post("/jobs")
