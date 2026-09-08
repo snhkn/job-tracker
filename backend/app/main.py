@@ -13,8 +13,8 @@ def home():
     return {"message": "this is awesome"}
 
 @app.get("/jobs")
-def get_jobs():
-    return jobs
+def get_jobs(db: Session = Depends(get_db)):
+    return db.query(JobApplication).all()
 
 @app.post("/jobs")
 def post_jobs(job: JobCreate, db: Session = Depends(get_db)):
