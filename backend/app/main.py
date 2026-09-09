@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from.schemas import JobCreate, JobUpdate, JobResponse
+from.schemas import JobCreate, JobUpdate, JobResponse, JobStatus
 from .database import engine, get_db
 from .models import JobApplication
 
@@ -58,7 +58,7 @@ def post_jobs(job: JobCreate, db: Session = Depends(get_db)):
         company = job.company,
         position = job.position,
         job_url = job.job_url,
-        status = "Saved"
+        status = JobStatus.SAVED
     )
     db.add(new_job)
     db.commit()
