@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from.schemas import JobCreate, JobUpdate
+from.schemas import JobCreate, JobUpdate, JobResponse
 from .database import engine, get_db
 from .models import JobApplication
 
@@ -12,11 +12,11 @@ app = FastAPI()
 def home():
     return {"message": "this is awesome"}
 
-@app.get("/jobs")
+@app.get("/jobs", response_model=list[JobResponse])
 def get_jobs(db: Session = Depends(get_db)):
     return db.query(JobApplication).all()
 
-@app.get("/jobs/{job_id}")
+@app.get("/jobs/{job_id}", response_model=JobResponse)
 def get_job(job_id : int, db: Session = Depends(get_db)):
     job = db.query(JobApplication).filter(
             JobApplication.id == job_id
@@ -27,7 +27,7 @@ def get_job(job_id : int, db: Session = Depends(get_db)):
     return job
 
 
-@app.put("/jobs/{job_id}")
+@app.put("/jobs/{job_id}", response_model=JobResponse)
 def edit_job(job_id : int, job: JobUpdate, db: Session = Depends(get_db)):
     updated_job = db.query(JobApplication).filter(
                 JobApplication.id == job_id
@@ -52,7 +52,7 @@ def edit_job(job_id : int, job: JobUpdate, db: Session = Depends(get_db)):
     return updated_job
 
 
-@app.post("/jobs")
+@app.post("/jobs", response_model=JobResponse)
 def post_jobs(job: JobCreate, db: Session = Depends(get_db)):
     new_job = JobApplication(
         company = job.company,
