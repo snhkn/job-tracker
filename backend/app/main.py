@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from.schemas import JobCreate, JobUpdate, JobResponse, JobStatus
 from .database import engine, get_db
 from .models import JobApplication
+from datetime import date
 
 
 app = FastAPI()
@@ -44,8 +45,17 @@ def edit_job(job_id : int, job: JobUpdate, db: Session = Depends(get_db)):
     if job.job_url is not None:
         updated_job.job_url = job.job_url
 
+
+    current_status = updated_job.status
+    new_status = job.status
+
+    if current_status == JobStatus.SAVED and new_status == JobStatus.APPLIED:
+        updated_job.date_applied = date.today()
+    elif current_status == JobStatus.APPLIED and new_status == JobStatus.SAVED:
+        updated_job.date_applied = None
+
     if job.status is not None:
-        updated_job.status = job.status
+        updated_job.status = new_status
 
     db.commit()
     db.refresh(updated_job)

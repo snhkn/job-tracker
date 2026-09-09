@@ -1,4 +1,5 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from datetime import date
 
 class Base(DeclarativeBase):
     pass
@@ -11,3 +12,4 @@ class JobApplication(Base):
     position : Mapped[str]
     job_url: Mapped[str | None]
     status: Mapped[str]
+    date_applied: Mapped[date | None]
