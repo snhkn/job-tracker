@@ -64,3 +64,18 @@ def post_jobs(job: JobCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_job)
     return new_job
+
+@app.delete("/jobs/{job_id}", status_code=204)
+def delete_job(job_id: int, db: Session = Depends(get_db)):
+    deleted_job =  db.query(JobApplication).filter(
+        JobApplication.id == job_id
+    ).first()
+
+    if deleted_job is None:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    db.delete(deleted_job)
+    db.commit()
+    return
+
+
