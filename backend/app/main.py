@@ -42,7 +42,7 @@ def edit_job(job_id : int, job: JobUpdate, db: Session = Depends(get_db)):
     if job.position is not None:
         updated_job.position = job.position
 
-    if job.job_url is not None:
+    if "job_url" in job.model_fields_set:
         updated_job.job_url = job.job_url
 
 
@@ -57,10 +57,10 @@ def edit_job(job_id : int, job: JobUpdate, db: Session = Depends(get_db)):
     if job.status is not None:
         updated_job.status = new_status
 
-    if job.job_description is not None:
+    if "job_description" in job.model_fields_set:
         updated_job.job_description = job.job_description
 
-    if job.location is not None:
+    if "location" in job.model_fields_set:
         updated_job.location = job.location
 
     db.commit()
