@@ -7,6 +7,11 @@ JobDescription = Annotated[
     Field(max_length=20_000)
 ]
 
+JobNotes = Annotated[
+    str,
+    Field(max_length=5_000)
+]
+
 
 class JobStatus(str, Enum):
     SAVED = "Saved"
@@ -21,6 +26,7 @@ class JobCreate(BaseModel):
     job_description: JobDescription | None = None
     location: str | None = None
     salary: str | None = None
+    notes: JobNotes | None = None
 
 class JobUpdate(BaseModel):
     company: str | None = None
@@ -30,6 +36,7 @@ class JobUpdate(BaseModel):
     job_description: JobDescription | None = None
     location: str | None = None
     salary: str | None = None
+    notes: JobNotes | None = None
 
 class JobResponse(BaseModel):
 
@@ -43,3 +50,4 @@ class JobResponse(BaseModel):
     job_description: JobDescription | None
     location: str | None
     salary: str | None
+    notes: JobNotes | None

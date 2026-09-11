@@ -16,3 +16,4 @@ class JobApplication(Base):
     job_description: Mapped[str | None]
     location: Mapped[str | None]
     salary: Mapped[str | None]
+    notes: Mapped[str | None]
