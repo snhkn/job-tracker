@@ -13,3 +13,4 @@ class JobApplication(Base):
     job_url: Mapped[str | None]
     status: Mapped[str]
     date_applied: Mapped[date | None]
+    job_description: Mapped[str | None]

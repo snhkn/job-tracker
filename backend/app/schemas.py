@@ -1,5 +1,11 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
+from typing import Annotated
 from enum import Enum
+
+JobDescription = Annotated[
+    str,
+    Field(max_length=20_000)
+]
 
 
 class JobStatus(str, Enum):
@@ -12,12 +18,14 @@ class JobCreate(BaseModel):
     company: str
     position: str
     job_url : str | None = None
+    job_description: JobDescription | None = None
 
 class JobUpdate(BaseModel):
     company: str | None = None
     position: str | None = None
     job_url: str | None = None
     status: JobStatus | None = None
+    job_description: JobDescription | None = None
 
 class JobResponse(BaseModel):
 
@@ -28,3 +36,4 @@ class JobResponse(BaseModel):
     position: str
     job_url: str | None
     status: str
+    job_description: JobDescription | None

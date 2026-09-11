@@ -57,6 +57,9 @@ def edit_job(job_id : int, job: JobUpdate, db: Session = Depends(get_db)):
     if job.status is not None:
         updated_job.status = new_status
 
+    if job.job_description is not None:
+        updated_job.job_description = job.job_description
+
     db.commit()
     db.refresh(updated_job)
     return updated_job
@@ -68,7 +71,8 @@ def post_jobs(job: JobCreate, db: Session = Depends(get_db)):
         company = job.company,
         position = job.position,
         job_url = job.job_url,
-        status = JobStatus.SAVED
+        status = JobStatus.SAVED,
+        job_description = job.job_description
     )
     db.add(new_job)
     db.commit()
