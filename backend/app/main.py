@@ -63,6 +63,9 @@ def edit_job(job_id : int, job: JobUpdate, db: Session = Depends(get_db)):
     if "location" in job.model_fields_set:
         updated_job.location = job.location
 
+    if "salary" in job.model_fields_set:
+        updated_job.salary = job.salary
+
     db.commit()
     db.refresh(updated_job)
     return updated_job
@@ -76,7 +79,8 @@ def post_jobs(job: JobCreate, db: Session = Depends(get_db)):
         job_url = job.job_url,
         status = JobStatus.SAVED,
         job_description = job.job_description,
-        location = job.location
+        location = job.location,
+        salary = job.salary
     )
     db.add(new_job)
     db.commit()

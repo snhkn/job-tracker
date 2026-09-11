@@ -20,6 +20,7 @@ class JobCreate(BaseModel):
     job_url : str | None = None
     job_description: JobDescription | None = None
     location: str | None = None
+    salary: str | None = None
 
 class JobUpdate(BaseModel):
     company: str | None = None
@@ -28,6 +29,7 @@ class JobUpdate(BaseModel):
     status: JobStatus | None = None
     job_description: JobDescription | None = None
     location: str | None = None
+    salary: str | None = None
 
 class JobResponse(BaseModel):
 
@@ -40,3 +42,4 @@ class JobResponse(BaseModel):
     status: str
     job_description: JobDescription | None
     location: str | None
+    salary: str | None

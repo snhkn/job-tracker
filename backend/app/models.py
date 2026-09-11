@@ -15,3 +15,4 @@ class JobApplication(Base):
     date_applied: Mapped[date | None]
     job_description: Mapped[str | None]
     location: Mapped[str | None]
+    salary: Mapped[str | None]
