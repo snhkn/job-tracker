@@ -1,9 +1,12 @@
-from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy.orm import Session
-from.schemas import JobCreate, JobUpdate, JobResponse, JobStatus
-from .database import engine, get_db
-from .models import JobApplication
 from datetime import date
+
+from fastapi import Depends, FastAPI, HTTPException
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Session
+
+from .database import get_db
+from .models import JobApplication
+from .schemas import JobCreate, JobResponse, JobStatus, JobUpdate
 
 
 app = FastAPI()
@@ -69,12 +72,20 @@ def edit_job(job_id : int, job: JobUpdate, db: Session = Depends(get_db)):
     if "notes" in job.model_fields_set:
         updated_job.notes = job.notes
 
-    db.commit()
-    db.refresh(updated_job)
+    try:
+        db.commit()
+        db.refresh(updated_job)
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail="Database error"
+        )
+
     return updated_job
 
 
-@app.post("/jobs", response_model=JobResponse)
+@app.post("/jobs", response_model=JobResponse, status_code=201)
 def post_jobs(job: JobCreate, db: Session = Depends(get_db)):
     new_job = JobApplication(
         company = job.company,
@@ -87,8 +98,17 @@ def post_jobs(job: JobCreate, db: Session = Depends(get_db)):
         notes = job.notes
     )
     db.add(new_job)
-    db.commit()
-    db.refresh(new_job)
+
+    try:
+        db.commit()
+        db.refresh(new_job)
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail="Database error"
+        )
+
     return new_job
 
 @app.delete("/jobs/{job_id}", status_code=204)
@@ -101,7 +121,14 @@ def delete_job(job_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Job not found")
 
     db.delete(deleted_job)
-    db.commit()
+    try:
+        db.commit()
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail="Database error"
+        )
     return
 
 
