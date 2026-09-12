@@ -1,6 +1,7 @@
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Annotated
 from enum import Enum
+from datetime import date
 
 JobDescription = Annotated[
     str,
@@ -47,6 +48,7 @@ class JobResponse(BaseModel):
     position: str
     job_url: str | None
     status: str
+    date_applied: date | None
     job_description: JobDescription | None
     location: str | None
     salary: str | None
