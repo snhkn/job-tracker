@@ -34,6 +34,31 @@ def test_create_job(test_db):
     assert data["location"] == "Istanbul"
     assert data["salary"] == "€60,000"
 
+def test_create_job_with_missing_required_field():
+
+    response = client.post("/jobs", json={
+        "position": "Backend Developer"
+    })
+
+    assert response.status_code == 422
+
+def test_create_job_with_too_long_job_description():
+    response = client.post("/jobs", json={
+        "company": "Google",
+        "position": "Backend Developer",
+        "job_description": "a" * 20_001
+    })
+
+    assert response.status_code == 422
+
+def test_create_job_with_too_long_notes():
+    response = client.post("/jobs", json={
+         "company": "Google",
+        "position": "Backend Developer",
+        "notes": "a" * 5_001
+    })
+
+    assert response.status_code == 422
 
 def test_invalid_status():
     response = client.put(
@@ -44,6 +69,13 @@ def test_invalid_status():
     )
 
     assert response.status_code == 422
+
+def test_get_jobs_empty(test_db):
+    response = client.get("/jobs")
+
+    assert response.status_code == 200
+    assert response.json() == []
+
 
 def test_get_job(test_db):
     create_response = client.post("/jobs", json={
@@ -70,6 +102,26 @@ def test_get_job_not_found(test_db):
 
     assert response.status_code == 404
     assert response.json() == { "detail" : "Job not found" }
+
+def test_get_jobs(test_db):
+    client.post("/jobs", json={
+        "company": "Google",
+        "position": "Backend Developer"
+    })
+
+    client.post("/jobs", json={
+        "company": "Microsoft",
+        "position": "Python Developer"
+    })
+
+    response = client.get("/jobs")
+
+    assert response.status_code == 200
+    data = response.json()
+
+    assert len(data) == 2
+    assert data[0]["company"] == "Google"
+    assert data[1]["company"] == "Microsoft"
 
 def test_update_job(test_db):
     create_response = client.post("/jobs", json={
