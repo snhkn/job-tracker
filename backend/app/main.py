@@ -31,6 +31,32 @@ def get_job(job_id : int, db: Session = Depends(get_db)):
     return job
 
 
+@app.post("/jobs", response_model=JobResponse, status_code=201)
+def post_jobs(job: JobCreate, db: Session = Depends(get_db)):
+    new_job = JobApplication(
+        company = job.company,
+        position = job.position,
+        job_url = job.job_url,
+        status = JobStatus.SAVED,
+        job_description = job.job_description,
+        location = job.location,
+        salary = job.salary,
+        notes = job.notes
+    )
+    db.add(new_job)
+
+    try:
+        db.commit()
+        db.refresh(new_job)
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail="Database error"
+        )
+
+    return new_job
+
 @app.put("/jobs/{job_id}", response_model=JobResponse)
 def edit_job(job_id : int, job: JobUpdate, db: Session = Depends(get_db)):
     updated_job = db.query(JobApplication).filter(
@@ -84,32 +110,6 @@ def edit_job(job_id : int, job: JobUpdate, db: Session = Depends(get_db)):
 
     return updated_job
 
-
-@app.post("/jobs", response_model=JobResponse, status_code=201)
-def post_jobs(job: JobCreate, db: Session = Depends(get_db)):
-    new_job = JobApplication(
-        company = job.company,
-        position = job.position,
-        job_url = job.job_url,
-        status = JobStatus.SAVED,
-        job_description = job.job_description,
-        location = job.location,
-        salary = job.salary,
-        notes = job.notes
-    )
-    db.add(new_job)
-
-    try:
-        db.commit()
-        db.refresh(new_job)
-    except SQLAlchemyError:
-        db.rollback()
-        raise HTTPException(
-            status_code=500,
-            detail="Database error"
-        )
-
-    return new_job
 
 @app.delete("/jobs/{job_id}", status_code=204)
 def delete_job(job_id: int, db: Session = Depends(get_db)):
