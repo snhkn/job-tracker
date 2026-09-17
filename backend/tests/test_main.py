@@ -300,7 +300,21 @@ def test_clear_notes(test_db):
 
     assert persisted_data["notes"] is None
 
+def test_cors_allows_frontend_origin(test_db):
+    response = client.get(
+        "/jobs",
+        headers={"Origin": "http://localhost:5173"}
+    )
 
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == "http://localhost:5173"
 
+def test_cors_rejects_unknown_origin(test_db):
+    response = client.get(
+            "/jobs",
+            headers={"Origin": "http://localhost:9999"}
+        )
 
+    assert response.status_code == 200
+    assert "access-control-allow-origin" not in response.headers
 
