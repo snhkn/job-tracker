@@ -1,7 +1,17 @@
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints, HttpUrl
 from typing import Annotated
 from enum import Enum
 from datetime import date
+
+JobCompany = Annotated[
+    str,
+    StringConstraints(strip_whitespace=True, min_length=1)
+]
+
+JobPosition = Annotated[
+    str,
+    StringConstraints(strip_whitespace=True, min_length=1)
+]
 
 JobDescription = Annotated[
     str,
@@ -21,18 +31,18 @@ class JobStatus(str, Enum):
     INTERVIEW = "Interview"
 
 class JobCreate(BaseModel):
-    company: str
-    position: str
-    job_url : str | None = None
+    company: JobCompany
+    position: JobPosition
+    job_url : HttpUrl | None = None
     job_description: JobDescription | None = None
     location: str | None = None
     salary: str | None = None
     notes: JobNotes | None = None
 
 class JobUpdate(BaseModel):
-    company: str | None = None
-    position: str | None = None
-    job_url: str | None = None
+    company: JobCompany | None = None
+    position: JobPosition | None = None
+    job_url: HttpUrl | None = None
     status: JobStatus | None = None
     job_description: JobDescription | None = None
     location: str | None = None
@@ -46,7 +56,7 @@ class JobResponse(BaseModel):
     id: int
     company: str
     position: str
-    job_url: str | None
+    job_url: HttpUrl | None
     status: str
     date_applied: date | None
     job_description: JobDescription | None

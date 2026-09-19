@@ -42,6 +42,32 @@ def test_create_job_with_missing_required_field():
 
     assert response.status_code == 422
 
+def test_create_job_with_empty_company(test_db):
+    response = client.post("/jobs", json={
+        "company": "",
+        "position": "Backend Developer"
+    })
+
+    print(response.json())
+    assert response.status_code == 422
+
+def test_create_job_with_whitespace_only_company(test_db):
+    response = client.post("/jobs", json={
+        "company": "   ",
+        "position": "Backend Developer"
+    })
+
+    assert response.status_code == 422
+
+def test_create_job_strips_company_whitespace(test_db):
+    response = client.post("/jobs", json={
+        "company": "  Google  ",
+        "position": "Backend Developer"
+    })
+
+    assert response.status_code == 201
+    assert response.json()["company"] == "Google"
+
 def test_create_job_with_too_long_job_description():
     response = client.post("/jobs", json={
         "company": "Google",
@@ -50,6 +76,46 @@ def test_create_job_with_too_long_job_description():
     })
 
     assert response.status_code == 422
+
+def test_create_job_with_invalid_url(test_db):
+    response = client.post("/jobs", json={
+        "company": "Google",
+        "position": "Backend Developer",
+        "job_url": "not-a-url"
+    })
+
+    assert response.status_code == 422
+
+def test_create_job_with_valid_url(test_db):
+    response = client.post("/jobs", json={
+            "company": "Google",
+            "position": "Backend Developer",
+            "job_url": "https://www.google.com/jobs"
+    })
+
+    assert response.status_code == 201
+    assert response.json()["job_url"] == "https://www.google.com/jobs"
+
+
+def test_create_job_with_empty_url(test_db):
+    response = client.post("/jobs", json={
+        "company": "Google",
+        "position": "Backend Developer",
+        "job_url": None
+    })
+
+    assert response.status_code == 201
+    assert response.json()["job_url"] is None
+
+def test_create_job_normalizes_url(test_db):
+    response = client.post("/jobs", json={
+        "company": "Google",
+        "position": "Backend Developer",
+        "job_url": "https://www.google.com"
+    })
+
+    assert response.status_code == 201
+    assert response.json()["job_url"] == "https://www.google.com/"
 
 def test_create_job_with_too_long_notes():
     response = client.post("/jobs", json={

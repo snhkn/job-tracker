@@ -46,7 +46,7 @@ def post_jobs(job: JobCreate, db: Session = Depends(get_db)):
     new_job = JobApplication(
         company = job.company,
         position = job.position,
-        job_url = job.job_url,
+        job_url = str(job.job_url) if job.job_url is not None else None,
         status = JobStatus.SAVED,
         job_description = job.job_description,
         location = job.location,
@@ -82,7 +82,9 @@ def edit_job(job_id : int, job: JobUpdate, db: Session = Depends(get_db)):
         updated_job.position = job.position
 
     if "job_url" in job.model_fields_set:
-        updated_job.job_url = job.job_url
+        updated_job.job_url = (
+            str(job.job_url) if job.job_url is not None else None
+        )
 
 
     current_status = updated_job.status

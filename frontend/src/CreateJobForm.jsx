@@ -12,8 +12,17 @@ function CreateJobForm({onJobCreated}){
         notes:""
     });
 
+    const [error, setError] = useState(null);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(null);
+
+        const payload = {
+            ...formData,
+            job_url : formData.job_url.trim() === "" ? null : formData.job_url
+        }
+
 
         try {
             const response = await fetch("http://localhost:8000/jobs", {
@@ -21,7 +30,7 @@ function CreateJobForm({onJobCreated}){
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(payload)
             });
 
             if (!response.ok) {
@@ -44,6 +53,7 @@ function CreateJobForm({onJobCreated}){
 
         } catch (e) {
             console.log(e);
+            setError("Something went wrong while creating the job.");
         }
     };
 
@@ -76,6 +86,7 @@ function CreateJobForm({onJobCreated}){
             <label>
                 Job url
                 <input
+                    type="url"
                     name="job_url"
                     value={formData.job_url}
                     onChange={handleChange}
@@ -113,6 +124,7 @@ function CreateJobForm({onJobCreated}){
                     onChange={handleChange}
                 />
             </label>
+            {error && <p>{error}</p>}
             <button type="submit">Add Job</button>
         </form>
     );
