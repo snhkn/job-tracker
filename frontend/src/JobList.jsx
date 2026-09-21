@@ -1,4 +1,6 @@
-function JobList({jobs, loading, error}){
+import JobCard from "./JobCard";
+
+function JobList({jobs, loading, error, onJobDeleted}){
 
 
     return(
@@ -14,11 +16,7 @@ function JobList({jobs, loading, error}){
                     ):(
                     <>
                     {jobs.map(job => (
-                        <article key={job.id}>
-                            <h2>{job.position} </h2>
-                            <p>Company: {job.company}</p>
-                            <p>Status: {job.status}</p>
-                        </article>
+                        <JobCard key={job.id} job={job} onJobDeleted={onJobDeleted}/>
                     ))}
                     </>
                 )

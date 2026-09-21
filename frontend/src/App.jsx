@@ -29,6 +29,14 @@ function App() {
     getJobs();
   }, []);
 
+  //Delete a job
+  const handleDeleted = (jobId) => {
+    setJobs((prevJobs) =>
+        prevJobs.filter((job) => job.id !== jobId)
+    );
+  };
+
+
   return (
     <>
       <CreateJobForm
@@ -37,9 +45,9 @@ function App() {
         }}
       />
 
-      <JobList jobs={jobs} loading={loading} error={error}/>
+      <JobList jobs={jobs} loading={loading} error={error} onJobDeleted={handleDeleted}/>
     </>
   )
 }
 
-export default App
+export default App;
