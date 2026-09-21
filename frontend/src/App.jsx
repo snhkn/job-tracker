@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import CreateJobForm from "./CreateJobForm"
+import JobForm from "./JobForm"
 import JobList from "./JobList"
 import "./App.css"
 
@@ -8,6 +8,7 @@ function App() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [editingJob, setEditingJob] = useState(null);
 
   useEffect(()=>{
     async function getJobs(){
@@ -39,13 +40,27 @@ function App() {
 
   return (
     <>
-      <CreateJobForm
+      <JobForm
+        editingJob={editingJob}
         onJobCreated={(createdJob)=>{
           setJobs(currentJobs => [...currentJobs, createdJob]);
         }}
+        onJobUpdated={(editedJob)=>{
+          setJobs(currentJobs=> currentJobs.map(
+              job =>job.id === editedJob.id ? editedJob : job)
+          );
+          setEditingJob(null);
+        }}
+        onCancelEdit={() => setEditingJob(null)}
       />
 
-      <JobList jobs={jobs} loading={loading} error={error} onJobDeleted={handleDeleted}/>
+      <JobList
+        jobs={jobs}
+        loading={loading}
+        error={error}
+        onJobDeleted={handleDeleted}
+        onJobEdit={(job)=> setEditingJob(job)}
+      />
     </>
   )
 }

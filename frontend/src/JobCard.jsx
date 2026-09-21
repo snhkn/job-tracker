@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function JobCard({job, onJobDeleted}){
+function JobCard({job, onJobDeleted, onJobEdit}){
 
     const [error, setError] = useState(null);
 
@@ -38,6 +38,7 @@ function JobCard({job, onJobDeleted}){
             <p>Status: {job.status}</p>
             {error && <p>{error}</p>}
             <button type="button" onClick={handleDelete}>Delete</button>
+            <button type="button" onClick={()=>onJobEdit(job)}>Edit</button>
         </article>
 
     );

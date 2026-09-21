@@ -1,6 +1,6 @@
 import JobCard from "./JobCard";
 
-function JobList({jobs, loading, error, onJobDeleted}){
+function JobList({jobs, loading, error, onJobDeleted, onJobEdit}){
 
 
     return(
@@ -16,7 +16,7 @@ function JobList({jobs, loading, error, onJobDeleted}){
                     ):(
                     <>
                     {jobs.map(job => (
-                        <JobCard key={job.id} job={job} onJobDeleted={onJobDeleted}/>
+                        <JobCard key={job.id} job={job} onJobDeleted={onJobDeleted} onJobEdit={onJobEdit}/>
                     ))}
                     </>
                 )
