@@ -4,13 +4,29 @@ import { useState } from "react";
 function JobList({jobs, loading, error, onJobDeleted, onJobEdit}){
 
     const [statusFilter, setStatusFilter] = useState("All");
+    const [search, setSearch] = useState("");
 
-    const filteredJobs = statusFilter === "All"
-        ? jobs
-        : jobs.filter(job => job.status === statusFilter);
+    const searchTerm = search.trim().toLowerCase();
+
+    const filteredJobs = jobs.filter(job => {
+        const matchesStatus =
+            statusFilter === "All" || job.status === statusFilter;
+
+        const matchesSearch =
+            job.company.toLowerCase().includes(searchTerm) ||
+            job.position.toLowerCase().includes(searchTerm);
+
+        return matchesStatus && matchesSearch;
+    });
 
     return(
         <div>
+            <input
+                type="search"
+                placeholder="Search by company or position"
+                value={search}
+                onChange={(e)=>setSearch(e.target.value)}
+            />
             <select
                 value={statusFilter}
                 onChange={(e)=>setStatusFilter(e.target.value)}>
