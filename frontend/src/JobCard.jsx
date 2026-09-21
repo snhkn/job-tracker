@@ -4,6 +4,14 @@ function JobCard({job, onJobDeleted, onJobEdit}){
 
     const [error, setError] = useState(null);
 
+    const formattedDate = job.date_applied
+        ? new Intl.DateTimeFormat("en-GB", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }) .format(new Date(`${job.date_applied}T00:00:00`))
+        :null;
+
     const handleDelete = async(e) => {
         setError(null);
         const confirmed = window.confirm(
@@ -36,6 +44,7 @@ function JobCard({job, onJobDeleted, onJobEdit}){
             <h2>{job.position}</h2>
             <p>Company: {job.company}</p>
             <p>Status: {job.status}</p>
+            {formattedDate && <p>Applied: {formattedDate}</p>}
             {error && <p>{error}</p>}
             <button type="button" onClick={handleDelete}>Delete</button>
             <button type="button" onClick={()=>onJobEdit(job)}>Edit</button>

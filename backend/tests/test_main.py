@@ -307,6 +307,84 @@ def test_status_from_applied_to_interview_update(test_db):
     assert data["status"] == "Interview"
     assert data["date_applied"] == date.today().isoformat()
 
+def test_status_from_saved_to_waiting_update(test_db):
+    create_response = client.post("/jobs", json={
+                "company": "Google",
+                "position": "Backend Developer"
+        })
+    assert create_response.status_code == 201
+
+    job_id = create_response.json()["id"]
+
+    edit_to_waiting_response = client.put(f"/jobs/{job_id}", json={
+            "status": "Waiting"
+        })
+    assert edit_to_waiting_response.status_code == 200
+
+    data = edit_to_waiting_response.json()
+
+    assert data["id"] == job_id
+    assert data["status"] == "Waiting"
+    assert data["date_applied"] == date.today().isoformat()
+
+def test_status_from_saved_to_interview_update(test_db):
+    create_response = client.post("/jobs", json={
+                "company": "Google",
+                "position": "Backend Developer"
+        })
+
+    assert create_response.status_code == 201
+
+    job_id = create_response.json()["id"]
+
+    edit_to_interview_response = client.put(f"/jobs/{job_id}", json={
+        "status": "Interview"
+    })
+
+    assert edit_to_interview_response.status_code == 200
+
+    edit_to_interview_response = client.put(f"/jobs/{job_id}", json={
+            "status": "Interview"
+    })
+
+    assert edit_to_interview_response.status_code == 200
+
+    data = edit_to_interview_response.json()
+
+    assert data["id"] == job_id
+    assert data["status"] == "Interview"
+    assert data["date_applied"] == date.today().isoformat()
+
+def test_status_from_interview_to_saved_update(test_db):
+    create_response = client.post("/jobs", json={
+            "company": "Google",
+            "position": "Backend Developer"
+        })
+
+    assert create_response.status_code == 201
+
+    job_id = create_response.json()["id"]
+
+    edit_to_interview_response = client.put(f"/jobs/{job_id}", json={
+        "status": "Interview"
+    })
+
+    assert edit_to_interview_response.status_code == 200
+
+    edit_to_saved_response = client.put(f"/jobs/{job_id}", json={
+        "status": "Saved"
+    })
+
+    assert edit_to_saved_response.status_code == 200
+
+    data = edit_to_saved_response.json()
+
+    assert data["id"] == job_id
+    assert data["status"] == "Saved"
+    assert data["date_applied"] is None
+
+
+
 def test_edit_job_with_nonexistent_id(test_db):
 
     response = client.put("/jobs/9999", json={})

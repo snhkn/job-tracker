@@ -90,9 +90,16 @@ def edit_job(job_id : int, job: JobUpdate, db: Session = Depends(get_db)):
     current_status = updated_job.status
     new_status = job.status
 
-    if current_status == JobStatus.SAVED and new_status == JobStatus.APPLIED:
+    if (current_status == JobStatus.SAVED
+        and new_status in (
+            JobStatus.APPLIED,
+            JobStatus.WAITING,
+            JobStatus.INTERVIEW,
+        )):
         updated_job.date_applied = date.today()
-    elif current_status == JobStatus.APPLIED and new_status == JobStatus.SAVED:
+
+    elif (current_status != JobStatus.SAVED
+        and new_status == JobStatus.SAVED):
         updated_job.date_applied = None
 
     if job.status is not None:
