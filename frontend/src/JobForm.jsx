@@ -1,48 +1,19 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 function JobForm({editingJob, onJobCreated, onJobUpdated, onCancelEdit}){
 
-    const[formData, setFormData] = useState({
-        company:"",
-        position:"",
-        job_url:"",
-        location:"",
-        salary:"",
-        job_description:"",
-        notes:"",
-        status: "Saved"
+    const [formData, setFormData] = useState({
+        company: editingJob?.company ?? "",
+        position: editingJob?.position ?? "",
+        job_url: editingJob?.job_url ?? "",
+        location: editingJob?.location ?? "",
+        salary: editingJob?.salary ?? "",
+        job_description: editingJob?.job_description ?? "",
+        notes: editingJob?.notes ?? "",
+        status: editingJob?.status ?? "Saved"
     });
 
     const [error, setError] = useState(null);
-
-
-    useEffect(()=>{
-
-        if(editingJob){
-            setFormData({
-                company: editingJob.company,
-                position: editingJob.position,
-                job_url: editingJob.job_url ?? "",
-                location: editingJob.location ?? "",
-                salary: editingJob.salary ?? "",
-                job_description: editingJob.job_description ?? "",
-                notes: editingJob.notes ?? "",
-                status: editingJob.status
-            })
-        }else{
-            setFormData({
-                company: "",
-                position: "",
-                job_url: "",
-                location: "",
-                salary: "",
-                job_description: "",
-                notes: "",
-                status: "Saved"
-            });
-        }
-
-    },[editingJob]);
 
 
     const handleSubmit = async (e) => {
@@ -71,7 +42,6 @@ function JobForm({editingJob, onJobCreated, onJobUpdated, onCancelEdit}){
 
                 const data = await response.json();
                 onJobCreated(data);
-                console.log(data);
 
                 setFormData({
                     company: "",
@@ -105,17 +75,7 @@ function JobForm({editingJob, onJobCreated, onJobUpdated, onCancelEdit}){
 
                 const data = await response.json();
                 onJobUpdated(data);
-                console.log(data);
 
-                setFormData({
-                    company: "",
-                    position: "",
-                    job_url: "",
-                    location: "",
-                    salary: "",
-                    job_description: "",
-                    notes: ""
-                });
 
             }catch(e){
                 console.log(e);

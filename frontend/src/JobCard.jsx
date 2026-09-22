@@ -12,7 +12,7 @@ function JobCard({job, onJobDeleted, onJobEdit}){
         }) .format(new Date(`${job.date_applied}T00:00:00`))
         :null;
 
-    const handleDelete = async(e) => {
+    const handleDelete = async() => {
         setError(null);
         const confirmed = window.confirm(
             "Are you sure you want to delete this job?"

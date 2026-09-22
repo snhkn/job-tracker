@@ -41,6 +41,7 @@ function App() {
   return (
     <>
       <JobForm
+        key={editingJob?.id ?? "new"}
         editingJob={editingJob}
         onJobCreated={(createdJob)=>{
           setJobs(currentJobs => [...currentJobs, createdJob]);
