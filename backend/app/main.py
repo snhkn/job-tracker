@@ -6,7 +6,9 @@ from sqlalchemy.orm import Session
 
 from .database import get_db
 from .models import JobApplication
-from .schemas import JobCreate, JobResponse, JobStatus, JobUpdate
+from .schemas import JobCreate, JobResponse, JobStatus, JobUpdate, JobExtractionRequest, JobExtractionResponse
+
+from .services.job_extraction_service import extract_job_details
 
 
 app = FastAPI()
@@ -66,6 +68,10 @@ def post_jobs(job: JobCreate, db: Session = Depends(get_db)):
         )
 
     return new_job
+
+@app.post("/jobs/extract", response_model=JobExtractionResponse)
+def extract_job(job: JobExtractionRequest):
+    return extract_job_details(job.job_description)
 
 @app.put("/jobs/{job_id}", response_model=JobResponse)
 def edit_job(job_id : int, job: JobUpdate, db: Session = Depends(get_db)):

@@ -15,6 +15,9 @@ function JobForm({editingJob, onJobCreated, onJobUpdated, onCancelEdit}){
 
     const [error, setError] = useState(null);
 
+    const [extracting, setExtracting] = useState(false);
+    const [extractionError, setExtractionError] = useState(null);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,7 +29,7 @@ function JobForm({editingJob, onJobCreated, onJobUpdated, onCancelEdit}){
         }
 
 
-        if(editingJob === null){
+        if(!editingJob){
             try {
                 const response = await fetch("http://localhost:8000/jobs", {
                     method: "POST",
@@ -50,7 +53,8 @@ function JobForm({editingJob, onJobCreated, onJobUpdated, onCancelEdit}){
                     location: "",
                     salary: "",
                     job_description: "",
-                    notes: ""
+                    notes: "",
+                    status: "Saved"
                 });
 
             } catch (e) {
@@ -94,11 +98,76 @@ function JobForm({editingJob, onJobCreated, onJobUpdated, onCancelEdit}){
             ...formData,
             [name] : value
         });
+
+        if (name === "job_description") {
+            setExtractionError(null);
+        }
+    };
+
+    const handleExtract = async() => {
+        if(!formData.job_description.trim()){
+            setExtractionError("Please enter a job description first");
+            return;
+        }
+
+        setExtracting(true);
+        setExtractionError(null);
+
+        try{
+            const response = await fetch("http://localhost:8000/jobs/extract" , {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        job_description: formData.job_description
+                    })
+                }
+            );
+
+            if(!response.ok){
+                throw new Error("Failed to extract job details.");
+            }
+
+            const extracted = await response.json();
+
+            setFormData((prev) => ({
+                ...prev,
+                company: extracted.company ?? prev.company,
+                position: extracted.position ?? prev.position,
+                location: extracted.location ?? prev.location,
+                salary: extracted.salary ?? prev.salary
+            }));
+
+        }catch(e){
+            console.error(e);
+            setExtractionError("Something went wrong during extraction.");
+        }finally{
+            setExtracting(false);
+        }
     };
 
     return(
 
         <form onSubmit={handleSubmit}>
+            <label>
+                Job description
+                <textarea
+                    name="job_description"
+                    value={formData.job_description}
+                    onChange={handleChange}
+                />
+            </label>
+            {!editingJob && (
+                <button
+                    type="button"
+                    onClick={handleExtract}
+                    disabled={extracting}
+                >
+                    {extracting ? "Extracting..." : "Extract with AI"}
+                </button>
+            )}
+            {extractionError && <p>{extractionError}</p>}
             <label>
                 Company
                 <input
@@ -137,14 +206,6 @@ function JobForm({editingJob, onJobCreated, onJobUpdated, onCancelEdit}){
                 <input
                     name="salary"
                     value={formData.salary}
-                    onChange={handleChange}
-                />
-            </label>
-            <label>
-                Job description
-                <textarea
-                    name="job_description"
-                    value={formData.job_description}
                     onChange={handleChange}
                 />
             </label>

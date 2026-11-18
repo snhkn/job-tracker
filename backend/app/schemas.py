@@ -63,3 +63,18 @@ class JobResponse(BaseModel):
     location: str | None
     salary: str | None
     notes: JobNotes | None
+
+class JobExtractionRequest(BaseModel):
+    job_description: JobDescription
+
+class JobExtractionResponse(BaseModel):
+    company: str | None = None
+    position: str | None = None
+    location: str | None = None
+    salary: str | None = None
+
+    summary: str
+    key_skills: list[str] = Field(default_factory=list)
+
+
+
