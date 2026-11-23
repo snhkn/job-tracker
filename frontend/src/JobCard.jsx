@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function JobCard({job, onJobDeleted, onJobEdit}){
 
     const [error, setError] = useState(null);
+
+    const navigate = useNavigate();
 
     const formattedDate = job.date_applied
         ? new Intl.DateTimeFormat("en-GB", {
@@ -48,6 +51,7 @@ function JobCard({job, onJobDeleted, onJobEdit}){
             {error && <p>{error}</p>}
             <button type="button" onClick={handleDelete}>Delete</button>
             <button type="button" onClick={()=>onJobEdit(job)}>Edit</button>
+            <button type="button" onClick={()=>navigate(`/jobs/${job.id}`)}>View</button>
         </article>
 
     );
