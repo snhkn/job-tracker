@@ -50,27 +50,108 @@ function JobDetails({onEdit}) {
         return <p>Job not found.</p>;
     }
 
-    return(
-        <div>
-            <h1>Job Details Page</h1>
-            <h2>{job.position}</h2>
-            <p>Company: {job.company}</p>
-            <p>Status: {job.status}</p>
-            <p>Job description: {job.job_description}</p>
-            <p>Job url: {job.job_url}</p>
-            <p>Location: {job.location}</p>
-            <p>Salary: {job.salary}</p>
-            <p>Notes: {job.notes}</p>
-            <p>Summary: {job.summary}</p>
-            <p>Key Skills: {job.key_skills.join(", ")}</p>
-            <button onClick={() => navigate("/")}>
-                Back to Job List
-            </button>
-            <button onClick={() => onEdit(job)}>
-                Edit
-            </button>
 
-        </div>
+    return (
+        <section className="job-details">
+            <div className="details-header">
+                <div>
+                    <button
+                        className="back-link"
+                        onClick={() => navigate("/")}
+                    >
+                        ← Back to applications
+                    </button>
+
+                    <h1>{job.position}</h1>
+                    <p className="details-company">{job.company}</p>
+                </div>
+
+                <span className={`status-badge status-${job.status.toLowerCase()}`}>
+                    {job.status}
+                </span>
+            </div>
+
+            <div className="details-grid">
+                <section className="details-section">
+                    <h3>Application information</h3>
+
+                    <div className="detail-item">
+                        <span>Location</span>
+                        <p>{job.location || "Not specified"}</p>
+                    </div>
+
+                    <div className="detail-item">
+                        <span>Salary</span>
+                        <p>{job.salary || "Not specified"}</p>
+                    </div>
+
+                    <div className="detail-item">
+                        <span>Job URL</span>
+                        {job.job_url ? (
+                            <a href={job.job_url} target="_blank" rel="noreferrer">
+                                View job posting ↗
+                            </a>
+                        ) : (
+                            <p>Not provided</p>
+                        )}
+                    </div>
+                </section>
+
+                <section className="details-section">
+                    <h3>AI-generated insights</h3>
+
+                    <div className="detail-item">
+                        <span>Summary</span>
+                        <p>{job.summary || "No summary available."}</p>
+                    </div>
+
+                    <div className="detail-item">
+                        <span>Key skills</span>
+                        {job.key_skills?.length > 0 ? (
+                            <div className="skill-list">
+                                {job.key_skills.map((skill, index) => (
+                                    <span className="skill-tag" key={index}>
+                                        {skill}
+                                    </span>
+                                ))}
+                            </div>
+                        ) : (
+                            <p>No skills extracted.</p>
+                        )}
+                    </div>
+                </section>
+
+                <section className="details-section full-width">
+                    <h3>Job description</h3>
+                    <p className="long-text">
+                        {job.job_description || "No job description provided."}
+                    </p>
+                </section>
+
+                <section className="details-section full-width">
+                    <h3>My notes</h3>
+                    <p className="long-text">
+                        {job.notes || "No notes added."}
+                    </p>
+                </section>
+            </div>
+
+            <div className="details-actions">
+                <button
+                    className="btn btn-secondary"
+                    onClick={() => navigate("/")}
+                >
+                    Back to job list
+                </button>
+
+                <button
+                    className="btn btn-primary"
+                    onClick={() => onEdit(job)}
+                >
+                    Edit application
+                </button>
+            </div>
+        </section>
     );
 
 }

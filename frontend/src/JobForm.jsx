@@ -152,102 +152,158 @@ function JobForm({editingJob, onJobCreated, onJobUpdated, onCancelEdit}){
         }
     };
 
-    return(
 
-        <form onSubmit={handleSubmit}>
-            <label>
+    return (
+        <section className="job-form-section">
+            <div className="form-header">
+            <div>
+                <h2>{editingJob ? "Edit application" : "Add a new job"}</h2>
+                <p>
+                {editingJob
+                    ? "Update your application details"
+                    : "Save a job opportunity to your tracker"}
+                </p>
+            </div>
+            </div>
+
+            <form className="job-form" onSubmit={handleSubmit}>
+            <label className="form-field full-width">
                 Job description
                 <textarea
-                    name="job_description"
-                    value={formData.job_description}
-                    onChange={handleChange}
+                className="form-control description-input"
+                name="job_description"
+                value={formData.job_description}
+                onChange={handleChange}
+                placeholder="Paste the job description here..."
                 />
             </label>
+
             {!editingJob && (
+                <div className="extraction-row">
                 <button
+                    className="btn btn-ai"
                     type="button"
                     onClick={handleExtract}
                     disabled={extracting}
                 >
-                    {extracting ? "Extracting..." : "Extract with AI"}
+                    {extracting ? "Extracting..." : "✦ Extract with AI"}
                 </button>
+                <span className="extraction-hint">
+                    Automatically fill in job details
+                </span>
+                </div>
             )}
-            {extractionError && <p>{extractionError}</p>}
-            <label>
+
+            {extractionError && (
+                <p className="form-error">{extractionError}</p>
+            )}
+
+            <div className="form-grid">
+                <label className="form-field">
                 Company
                 <input
+                    className="form-control"
                     name="company"
                     value={formData.company}
                     onChange={handleChange}
+                    placeholder="Company name"
                 />
-            </label>
-            <label>
+                </label>
+
+                <label className="form-field">
                 Position
                 <input
+                    className="form-control"
                     name="position"
                     value={formData.position}
                     onChange={handleChange}
+                    placeholder="Job title"
                 />
-            </label>
-            <label>
-                Job url
+                </label>
+
+                <label className="form-field">
+                Location
                 <input
+                    className="form-control"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleChange}
+                    placeholder="e.g. Istanbul / Remote"
+                />
+                </label>
+
+                <label className="form-field">
+                Salary
+                <input
+                    className="form-control"
+                    name="salary"
+                    value={formData.salary}
+                    onChange={handleChange}
+                    placeholder="Salary range"
+                />
+                </label>
+
+                <label className="form-field full-width">
+                Job URL
+                <input
+                    className="form-control"
                     type="url"
                     name="job_url"
                     value={formData.job_url}
                     onChange={handleChange}
+                    placeholder="https://..."
                 />
-            </label>
-            <label>
-                Location
-                <input
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
-                />
-            </label>
-            <label>
-                Salary
-                <input
-                    name="salary"
-                    value={formData.salary}
-                    onChange={handleChange}
-                />
-            </label>
-            <label>
+                </label>
+
+                <label className="form-field full-width">
                 Notes
                 <textarea
+                    className="form-control notes-input"
                     name="notes"
                     value={formData.notes}
                     onChange={handleChange}
+                    placeholder="Add your personal notes..."
                 />
-            </label>
+                </label>
 
-            {editingJob ? (
-                <label>
+                {editingJob && (
+                <label className="form-field">
                     Status
                     <select
-                        name="status"
-                        value={formData.status}
-                        onChange={handleChange}
+                    className="form-control"
+                    name="status"
+                    value={formData.status}
+                    onChange={handleChange}
                     >
-                        <option value="Saved">Saved</option>
-                        <option value="Applied">Applied</option>
-                        <option value="Waiting">Waiting</option>
-                        <option value="Interview">Interview</option>
+                    <option value="Saved">Saved</option>
+                    <option value="Applied">Applied</option>
+                    <option value="Waiting">Waiting</option>
+                    <option value="Interview">Interview</option>
                     </select>
                 </label>
-            ) : null}
+                )}
+            </div>
 
-            {error && <p>{error}</p>}
-            <button type="submit">{editingJob ? "Edit Job" :"Add Job"}</button>
+            {error && <p className="form-error">{error}</p>}
 
-            {editingJob && (
-                <button type="button" onClick={onCancelEdit}>
+            <div className="form-actions">
+                <button className="btn btn-primary" type="submit">
+                {editingJob ? "Save changes" : "Add job"}
+                </button>
+
+                {editingJob && (
+                <button
+                    className="btn btn-secondary"
+                    type="button"
+                    onClick={onCancelEdit}
+                >
                     Cancel
                 </button>
-            )}
-        </form>
+                )}
+            </div>
+            </form>
+        </section>
     );
+
 }
 export default JobForm;

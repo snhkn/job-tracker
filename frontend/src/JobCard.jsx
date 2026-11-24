@@ -42,20 +42,71 @@ function JobCard({job, onJobDeleted, onJobEdit}){
     };
 
 
-    return(
-        <article>
-            <h2>{job.position}</h2>
-            <p>Company: {job.company}</p>
-            <p>Status: {job.status}</p>
-            <p>Summary: {job.summary}</p>
-            <p>Key Skills: {job.key_skills.join(", ")}</p>
-            {formattedDate && <p>Applied: {formattedDate}</p>}
-            {error && <p>{error}</p>}
-            <button type="button" onClick={handleDelete}>Delete</button>
-            <button type="button" onClick={()=>onJobEdit(job)}>Edit</button>
-            <button type="button" onClick={()=>navigate(`/jobs/${job.id}`)}>View</button>
-        </article>
 
+    return (
+    <article className="job-card">
+        <div className="job-card-main">
+        <div className="job-card-heading">
+            <div>
+            <h3>{job.position}</h3>
+            <p className="job-company">{job.company}</p>
+            </div>
+
+            <span className={`status-badge status-${job.status.toLowerCase()}`}>
+            {job.status}
+            </span>
+        </div>
+
+        {formattedDate && (
+            <p className="job-date">Applied {formattedDate}</p>
+        )}
+
+        {job.summary && (
+            <p className="job-summary">{job.summary}</p>
+        )}
+
+        {job.key_skills?.length > 0 && (
+            <div className="skill-list">
+            {job.key_skills.map((skill, index) => (
+                <span className="skill-tag" key={index}>
+                {skill}
+                </span>
+            ))}
+            </div>
+        )}
+        </div>
+
+        <div className="job-card-footer">
+        {error && <p className="error-message">{error}</p>}
+
+        <div className="job-actions">
+            <button
+            className="btn btn-secondary"
+            type="button"
+            onClick={() => navigate(`/jobs/${job.id}`)}
+            >
+            View
+            </button>
+
+            <button
+            className="btn btn-secondary"
+            type="button"
+            onClick={() => onJobEdit(job)}
+            >
+            Edit
+            </button>
+
+            <button
+            className="btn btn-danger"
+            type="button"
+            onClick={handleDelete}
+            >
+            Delete
+            </button>
+        </div>
+        </div>
+    </article>
     );
+
 }
 export default JobCard;

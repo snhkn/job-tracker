@@ -48,42 +48,58 @@ function App() {
   };
 
 
+
   return (
-    <Routes>
-      <Route path="/" element={
-        <>
-          <JobForm
-            key={editingJob?.id ?? "new"}
-            editingJob={editingJob}
-            onJobCreated={(createdJob)=>{
-              setJobs(currentJobs => [...currentJobs, createdJob]);
-            }}
-            onJobUpdated={(editedJob)=>{
-              setJobs(currentJobs=> currentJobs.map(
-                  job =>job.id === editedJob.id ? editedJob : job)
-              );
-              setEditingJob(null);
-            }}
-            onCancelEdit={() => setEditingJob(null)}
-          />
+    <div className="app-shell">
+      <header className="app-header">
+        <div className="header-inner">
+          <div className="brand">
+            <div className="brand-logo">JT</div>
+            <div className="brand-text">
+              <h1>Job Tracker</h1>
+              <p>Keep your job search organized</p>
+            </div>
+          </div>
+        </div>
+      </header>
 
-          <JobList
-            jobs={jobs}
-            loading={loading}
-            error={error}
-            onJobDeleted={handleDeleted}
-            onJobEdit={(job)=> setEditingJob(job)}
-          />
-        </>
-      }/>
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={
+            <>
+              <JobForm
+                key={editingJob?.id ?? "new"}
+                editingJob={editingJob}
+                onJobCreated={(createdJob)=>{
+                  setJobs(currentJobs => [...currentJobs, createdJob]);
+                }}
+                onJobUpdated={(editedJob)=>{
+                  setJobs(currentJobs=> currentJobs.map(
+                    job => job.id === editedJob.id ? editedJob : job
+                  ));
+                  setEditingJob(null);
+                }}
+                onCancelEdit={() => setEditingJob(null)}
+              />
 
-      <Route path="/jobs/:jobId" element={
-        <JobDetails onEdit={handleEdit}/>
-      }/>
+              <JobList
+                jobs={jobs}
+                loading={loading}
+                error={error}
+                onJobDeleted={handleDeleted}
+                onJobEdit={(job)=> setEditingJob(job)}
+              />
+            </>
+          }/>
 
-    </Routes>
+          <Route path="/jobs/:jobId" element={
+            <JobDetails onEdit={handleEdit}/>
+          }/>
+        </Routes>
+      </main>
+    </div>
+  );
 
-  )
-}
+};
 
 export default App;
