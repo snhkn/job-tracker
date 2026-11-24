@@ -61,6 +61,8 @@ function JobDetails({onEdit}) {
             <p>Location: {job.location}</p>
             <p>Salary: {job.salary}</p>
             <p>Notes: {job.notes}</p>
+            <p>Summary: {job.summary}</p>
+            <p>Key Skills: {job.key_skills.join(", ")}</p>
             <button onClick={() => navigate("/")}>
                 Back to Job List
             </button>

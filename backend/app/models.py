@@ -1,4 +1,5 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy import Text, JSON
 from datetime import date
 
 class Base(DeclarativeBase):
@@ -17,3 +18,5 @@ class JobApplication(Base):
     location: Mapped[str | None]
     salary: Mapped[str | None]
     notes: Mapped[str | None]
+    summary: Mapped[str | None] = mapped_column(Text, nullable=True)
+    key_skills: Mapped[list[str]] = mapped_column(JSON, default=list, nullable=False)

@@ -40,6 +40,8 @@ function JobForm({editingJob, onJobCreated, onJobUpdated, onCancelEdit}){
                 });
 
                 if (!response.ok) {
+                    const errorData = await response.json();
+                    console.log(errorData);
                     throw new Error("Failed to create job");
                 }
 
@@ -60,6 +62,7 @@ function JobForm({editingJob, onJobCreated, onJobUpdated, onCancelEdit}){
             } catch (e) {
                 console.log(e);
                 setError("Something went wrong while creating the job.");
+
             }
         }else{
 
@@ -136,7 +139,9 @@ function JobForm({editingJob, onJobCreated, onJobUpdated, onCancelEdit}){
                 company: extracted.company ?? prev.company,
                 position: extracted.position ?? prev.position,
                 location: extracted.location ?? prev.location,
-                salary: extracted.salary ?? prev.salary
+                salary: extracted.salary ?? prev.salary,
+                summary: extracted.summary ?? prev.summary,
+                key_skills: extracted.key_skills ?? prev.key_skills
             }));
 
         }catch(e){

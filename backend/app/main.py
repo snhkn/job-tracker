@@ -53,7 +53,9 @@ def post_jobs(job: JobCreate, db: Session = Depends(get_db)):
         job_description = job.job_description,
         location = job.location,
         salary = job.salary,
-        notes = job.notes
+        notes = job.notes,
+        summary = job.summary,
+        key_skills = job.key_skills
     )
     db.add(new_job)
 
@@ -122,6 +124,12 @@ def edit_job(job_id : int, job: JobUpdate, db: Session = Depends(get_db)):
 
     if "notes" in job.model_fields_set:
         updated_job.notes = job.notes
+
+    if "summary" in job.model_fields_set:
+        updated_job.summary = job.summary
+
+    if "key_skills" in job.model_fields_set:
+        updated_job.key_skills = job.key_skills
 
     try:
         db.commit()

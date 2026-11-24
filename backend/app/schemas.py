@@ -38,6 +38,8 @@ class JobCreate(BaseModel):
     location: str | None = None
     salary: str | None = None
     notes: JobNotes | None = None
+    summary: str | None = None
+    key_skills: list[str] = Field(default_factory=list)
 
 class JobUpdate(BaseModel):
     company: JobCompany | None = None
@@ -48,6 +50,8 @@ class JobUpdate(BaseModel):
     location: str | None = None
     salary: str | None = None
     notes: JobNotes | None = None
+    summary: str | None = None
+    key_skills: list[str] = Field(default_factory=list)
 
 class JobResponse(BaseModel):
 
@@ -63,6 +67,8 @@ class JobResponse(BaseModel):
     location: str | None
     salary: str | None
     notes: JobNotes | None
+    summary: str | None
+    key_skills: list[str]
 
 class JobExtractionRequest(BaseModel):
     job_description: JobDescription

@@ -47,6 +47,8 @@ function JobCard({job, onJobDeleted, onJobEdit}){
             <h2>{job.position}</h2>
             <p>Company: {job.company}</p>
             <p>Status: {job.status}</p>
+            <p>Summary: {job.summary}</p>
+            <p>Key Skills: {job.key_skills.join(", ")}</p>
             {formattedDate && <p>Applied: {formattedDate}</p>}
             {error && <p>{error}</p>}
             <button type="button" onClick={handleDelete}>Delete</button>
