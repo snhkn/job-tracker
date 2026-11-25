@@ -21,6 +21,8 @@ Mako==1.4.3
 MarkupSafe==3.0.4
 packaging==26.3
 pluggy==1.6.0
+psycopg==3.3.9
+psycopg-binary==3.3.9
 pyasn1==0.6.5
 pyasn1_modules==0.4.2
 pycparser==3.12

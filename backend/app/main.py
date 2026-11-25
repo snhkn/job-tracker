@@ -1,3 +1,7 @@
+import os
+from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware
+
 from datetime import date
 
 from fastapi import Depends, FastAPI, HTTPException
@@ -10,14 +14,18 @@ from .schemas import JobCreate, JobResponse, JobStatus, JobUpdate, JobExtraction
 
 from .services.job_extraction_service import extract_job_details
 
+load_dotenv()
 
 app = FastAPI()
 
-from fastapi.middleware.cors import CORSMiddleware
+allowed_origins = os.getenv(
+    "CORS_ORIGINS",
+    "http://localhost:5173"
+).split(",")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[origin.strip() for origin in allowed_origins],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
