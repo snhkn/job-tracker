@@ -31,7 +31,7 @@ function JobForm({editingJob, onJobCreated, onJobUpdated, onCancelEdit}){
 
         if(!editingJob){
             try {
-                const response = await fetch("http://localhost:8000/jobs", {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/jobs`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -67,7 +67,7 @@ function JobForm({editingJob, onJobCreated, onJobUpdated, onCancelEdit}){
         }else{
 
             try{
-                const response = await fetch(`http://localhost:8000/jobs/${editingJob.id}`, {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/jobs/${editingJob.id}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json"
@@ -117,7 +117,7 @@ function JobForm({editingJob, onJobCreated, onJobUpdated, onCancelEdit}){
         setExtractionError(null);
 
         try{
-            const response = await fetch("http://localhost:8000/jobs/extract" , {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/jobs/extract` , {
                     method: "POST",
                     headers: {
                         "Content-type": "application/json"

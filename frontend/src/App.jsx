@@ -18,7 +18,7 @@ function App() {
   useEffect(()=>{
     async function getJobs(){
       try{
-        const response = await fetch(`http://localhost:8000/jobs`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/jobs`);
         if(!response.ok){
           throw new Error("Failed to load jobs.");
         }

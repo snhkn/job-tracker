@@ -24,7 +24,7 @@ function JobCard({job, onJobDeleted, onJobEdit}){
         if (!confirmed) return;
 
         try{
-            const response = await fetch(`http://localhost:8000/jobs/${job.id}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/jobs/${job.id}`, {
                 method: "DELETE"
             } );
 
